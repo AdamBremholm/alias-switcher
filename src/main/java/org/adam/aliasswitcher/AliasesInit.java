@@ -3,6 +3,7 @@ package org.adam.aliasswitcher;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.data.domain.Example;
 
 import java.util.List;
 
@@ -17,10 +18,6 @@ public class AliasesInit {
 
     public void init(Storage storage) {
 
-        Alias privateVpnTokyo = AliasFactory.createAlias("privateVpnTokyo");
-        Alias azireOpenStockholm = AliasFactory.createAlias("azireOpenStockholm");
-        Alias azireClosedStockholm = AliasFactory.createAlias("azireClosedStockholm");
-        Alias wan = AliasFactory.createAlias("wan");
 
         Host adamDesktop = HostFactory.createHost("adam-desktop", "192.168.1.101");
         Host nazgul = HostFactory.createHost("nazgul", "192.168.1.102");
@@ -31,6 +28,13 @@ public class AliasesInit {
         Host philipsTV = HostFactory.createHost("philips-tv", "192.168.1.109");
         Host erikaOneplus5 = HostFactory.createHost("erika-oneplus5", "192.168.1.110");
         Host erikaLaptopAsus = HostFactory.createHost("erika-laptop-asus", "192.168.1.111");
+
+
+
+        Alias privateVpnTokyo = AliasFactory.createAlias("privateVpnTokyo");
+        Alias azireOpenStockholm = AliasFactory.createAlias("azireOpenStockholm");
+        Alias azireClosedStockholm = AliasFactory.createAlias("azireClosedStockholm");
+        Alias wan = AliasFactory.createAlias("wan");
 
         privateVpnTokyo.add(philipsTV);
         privateVpnTokyo.add(chromecast);
@@ -47,9 +51,7 @@ public class AliasesInit {
         storage.save(azireClosedStockholm);
         storage.save(wan);
 
-        System.out.println(privateVpnTokyo);
 
-        System.out.println(storage.findAll());
 
 
     }

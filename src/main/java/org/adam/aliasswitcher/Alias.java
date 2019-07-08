@@ -1,24 +1,34 @@
 package org.adam.aliasswitcher;
 
 import lombok.Data;
-import lombok.NonNull;
 
 import javax.persistence.*;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Data
-@Entity
+@Entity(name = "Alias")
+@Table(name = "alias")
 public class Alias {
 
-    private @Id @GeneratedValue Long id;
-    @OneToMany(targetEntity=Host.class, mappedBy = "name", fetch=FetchType.EAGER)
-    private @NonNull List<Host> hosts;
-    private @NonNull String name;
+    @Id
+    @GeneratedValue
+    private  Long id;
+
+    @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true)
+    @JoinColumn(name = "alias_id")
+    private List<Host> hosts;
+
+    private String name;
 
     public Alias(String name, List<Host> hosts) {
         this.name = name;
         this.hosts = hosts;
+    }
+
+    public Alias(String name) {
+        this.name = name;
     }
 
     public Alias() {
