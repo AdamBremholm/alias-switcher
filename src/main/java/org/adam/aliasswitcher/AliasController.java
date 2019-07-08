@@ -26,10 +26,16 @@ public class AliasController {
     }
 
     @GetMapping("/aliases/{id}")
-    public Alias getOne(@PathVariable Long id){
-        return storage.findById(id)
+    public List<Host> getOne(@PathVariable Long id){
+        Alias alias = storage.findById(id)
                 .orElseThrow( () -> new AliasException("No alias with id " + id));
+
+        return alias.getHosts();
     }
+
+
+
+
 
 
 }

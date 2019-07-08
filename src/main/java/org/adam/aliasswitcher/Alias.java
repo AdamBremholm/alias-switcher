@@ -1,23 +1,31 @@
 package org.adam.aliasswitcher;
 
 import lombok.Data;
+import lombok.NonNull;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
+import javax.persistence.*;
+
 import java.util.List;
 
 @Data
 @Entity
 public class Alias {
 
-    private List<Host> hosts;
+    private @Id @GeneratedValue Long id;
+    @OneToMany(targetEntity=Host.class, mappedBy = "name", fetch=FetchType.EAGER)
+    private @NonNull List<Host> hosts;
+    private @NonNull String name;
 
-    public Alias(List<Host> hosts) {
+    public Alias(String name, List<Host> hosts) {
+        this.name = name;
         this.hosts = hosts;
     }
 
     public Alias() {
+    }
+
+    public void add(Host host) {
+        hosts.add(host);
     }
 }
 

@@ -17,10 +17,10 @@ public class AliasesInit {
 
     public void init(Storage storage) {
 
-        Alias privateVpnTokyo = AliasFactory.createEmptyAlias();
-        Alias azireOpenStockholm = AliasFactory.createEmptyAlias();
-        Alias azireClosedStockholm = AliasFactory.createEmptyAlias();
-        Alias WAN = AliasFactory.createEmptyAlias();
+        Alias privateVpnTokyo = AliasFactory.createAlias("privateVpnTokyo");
+        Alias azireOpenStockholm = AliasFactory.createAlias("azireOpenStockholm");
+        Alias azireClosedStockholm = AliasFactory.createAlias("azireClosedStockholm");
+        Alias wan = AliasFactory.createAlias("wan");
 
         Host adamDesktop = HostFactory.createHost("adam-desktop", "192.168.1.101");
         Host nazgul = HostFactory.createHost("nazgul", "192.168.1.102");
@@ -31,6 +31,25 @@ public class AliasesInit {
         Host philipsTV = HostFactory.createHost("philips-tv", "192.168.1.109");
         Host erikaOneplus5 = HostFactory.createHost("erika-oneplus5", "192.168.1.110");
         Host erikaLaptopAsus = HostFactory.createHost("erika-laptop-asus", "192.168.1.111");
+
+        privateVpnTokyo.add(philipsTV);
+        privateVpnTokyo.add(chromecast);
+        azireOpenStockholm.add(nazgul);
+        azireClosedStockholm.add(adamDesktop);
+        azireClosedStockholm.add(adamOneplus6);
+        wan.add(adamLaptopLenovo);
+        wan.add(adamSamsungTablet);
+        wan.add(erikaOneplus5);
+        wan.add(erikaLaptopAsus);
+
+        storage.save(privateVpnTokyo);
+        storage.save(azireOpenStockholm);
+        storage.save(azireClosedStockholm);
+        storage.save(wan);
+
+        System.out.println(privateVpnTokyo);
+
+        System.out.println(storage.findAll());
 
 
     }

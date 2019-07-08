@@ -5,7 +5,7 @@ import java.util.List;
 
 public class AliasFactory {
 
-    public static Alias createEmptyAlias() {
+    public static Alias createAlias(String name) {
 
         List<Host> hosts = new ArrayList<>();
         Alias alias = new Alias();
