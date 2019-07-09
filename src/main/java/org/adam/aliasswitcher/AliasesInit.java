@@ -3,20 +3,17 @@ package org.adam.aliasswitcher;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.data.domain.Example;
-
-import java.util.List;
 
 
 @Configuration
 public class AliasesInit {
 
     @Bean
-    public CommandLineRunner initDatabase(Storage storage) {
-        return args -> init(storage);
+    public CommandLineRunner initDatabase(AliasRepository aliasRepository) {
+        return args -> init(aliasRepository);
     }
 
-    public void init(Storage storage) {
+    public void init(AliasRepository aliasRepository) {
 
 
         Host adamDesktop = HostFactory.createHost("adam-desktop", "192.168.1.101");
@@ -46,10 +43,10 @@ public class AliasesInit {
         wan.add(erikaOneplus5);
         wan.add(erikaLaptopAsus);
 
-        storage.save(privateVpnTokyo);
-        storage.save(azireOpenStockholm);
-        storage.save(azireClosedStockholm);
-        storage.save(wan);
+        aliasRepository.save(privateVpnTokyo);
+        aliasRepository.save(azireOpenStockholm);
+        aliasRepository.save(azireClosedStockholm);
+        aliasRepository.save(wan);
 
 
 

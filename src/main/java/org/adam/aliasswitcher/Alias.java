@@ -15,12 +15,11 @@ public class Alias {
     @Id
     @GeneratedValue
     private  Long id;
-
+    private String name;
     @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true)
     @JoinColumn(name = "alias_id")
     private List<Host> hosts;
 
-    private String name;
 
     public Alias(String name, List<Host> hosts) {
         this.name = name;

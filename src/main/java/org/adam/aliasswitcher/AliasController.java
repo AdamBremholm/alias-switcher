@@ -1,7 +1,6 @@
 package org.adam.aliasswitcher;
 
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Example;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.bind.annotation.RestController;
@@ -14,35 +13,20 @@ import java.util.List;
 @RestController
 public class AliasController {
 
-    Storage storage;
+    AliasRepository aliasRepository;
     RestTemplate restTemplate;
 
 
-    public AliasController(Storage storage) {
-        this.storage = storage;
+    public AliasController(AliasRepository aliasRepository) {
+        this.aliasRepository = aliasRepository;
     }
 
-    @GetMapping("/aliases")
-    public List<Alias> getAll(){
-        return storage.findAll();
-    }
 
-    @GetMapping("/aliases/{id}")
-    public List<Host> getOne(@PathVariable Long id){
-        Alias alias = storage.findById(id)
-                .orElseThrow( () -> new AliasException("No alias with id " + id));
-
-        return alias.getHosts();
-    }
-  //t.ex: alias?name=azireClosedStockholm
-    @GetMapping("/alias")
+  //t.ex: aliases/search/findAddressesByName?name=privateVpnTokyo
+    @GetMapping("/aliases/search/findAddressesByName")
     public String getIps(@RequestParam String name){
 
-
-       Alias aliasExample = new Alias(name);
-        Example<Alias> example = Example.of(aliasExample);
-
-        List<Alias> aliases = storage.findAll(example);
+        List<Alias> aliases = aliasRepository.findByName(name);
 
         if (aliases.size()<1){
             throw new AliasException("No aliases found named " + name);
@@ -55,7 +39,6 @@ public class AliasController {
         }
 
         StringBuilder ipList = new StringBuilder();
-
 
         for (Host host : hostList) {
             ipList.append(host.getAddress()).append(System.lineSeparator());
