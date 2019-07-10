@@ -48,6 +48,10 @@ public class AliasesInit {
         aliasRepository.save(azireClosedStockholm);
         aliasRepository.save(wan);
 
+        Auth auth = new Auth();
+
+        auth.fauxapiAuth();
+
 
 
 

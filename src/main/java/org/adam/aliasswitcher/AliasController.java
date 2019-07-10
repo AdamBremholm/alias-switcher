@@ -2,6 +2,8 @@ package org.adam.aliasswitcher;
 
 
 import org.springframework.data.domain.Example;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.client.RestTemplate;
@@ -15,6 +17,8 @@ public class AliasController {
 
     AliasRepository aliasRepository;
     RestTemplate restTemplate;
+
+
 
 
     public AliasController(AliasRepository aliasRepository) {
@@ -46,6 +50,7 @@ public class AliasController {
 
         return ipList.toString();
     }
+
 
 
 
