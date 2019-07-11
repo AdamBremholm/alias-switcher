@@ -15,12 +15,10 @@ import java.util.concurrent.ThreadLocalRandom;
 public class Auth {
 
     final String host = "192.168.1.2";
-    final String apiKey = "PFFAwuKrL5KgIrOS3hPRv1Vv";
-    final String apiSecret = "4mn7jwYdGWGjVrnWFnNp7wkx68OX0KxsgIs4rm2D9CW5zTLjtcFqlocXAH4i";
 
-
-    public String fauxapiAuth(){
-
+    public static String fauxapiAuth(){
+        final String apiKey = "PFFAwuKrL5KgIrOS3hPRv1Vv";
+        final String apiSecret = "4mn7jwYdGWGjVrnWFnNp7wkx68OX0KxsgIs4rm2D9CW5zTLjtcFqlocXAH4i";
         String utcStamp = getUTCTimeStamp();
         String nonce = getNonce();
         String sha256hex = DigestUtils.sha256Hex(apiSecret+utcStamp+nonce);
@@ -31,7 +29,7 @@ public class Auth {
 
     }
 
-    private String getNonce() {
+    private static String getNonce() {
         RandomString gen = new RandomString(8, ThreadLocalRandom.current());
         RandomString session = new RandomString();
         String easy = RandomString.digits + "ACEFGHJKLMNPQRUVWXYabcdefhijkprstuvwx";
@@ -39,7 +37,7 @@ public class Auth {
        return tickets.nextString();
     }
 
-    private String getUTCTimeStamp() {
+    private static String getUTCTimeStamp() {
         SimpleDateFormat dateFormatGmt = new SimpleDateFormat("yyyyMMdd'Z'HHmmss");
         dateFormatGmt.setTimeZone(TimeZone.getTimeZone("UTC"));
 
