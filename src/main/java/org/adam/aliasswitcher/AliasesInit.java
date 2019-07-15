@@ -1,5 +1,11 @@
 package org.adam.aliasswitcher;
 
+import org.adam.aliasswitcher.AliasRepository;
+import org.adam.aliasswitcher.Auth;
+import org.adam.aliasswitcher.Alias;
+import org.adam.aliasswitcher.AliasFactory;
+import org.adam.aliasswitcher.Host;
+import org.adam.aliasswitcher.HostFactory;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -51,6 +57,7 @@ public class AliasesInit {
         Auth auth = new Auth();
 
         auth.fauxapiAuth();
+
 
 
 
