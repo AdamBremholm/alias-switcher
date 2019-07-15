@@ -6,6 +6,7 @@ import org.springframework.http.*;
 import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestTemplate;
 
 import java.security.KeyManagementException;
@@ -19,8 +20,7 @@ import org.apache.http.conn.ssl.SSLConnectionSocketFactory;
 import org.apache.http.conn.ssl.TrustStrategy;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
-import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
-import org.springframework.web.client.RestTemplate;
+import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 
 
 import java.util.ArrayList;
@@ -29,15 +29,18 @@ import java.util.List;
 
 
 @RestController
+@EnableWebMvc
 public class AliasController {
 
     AliasRepository aliasRepository;
-    RestTemplate restTemplate;
+    String pfsenseUrl = "https://192.168.1.2";
 
 
-    public AliasController(AliasRepository aliasRepository, RestTemplate restTemplate) {
+
+    public AliasController(AliasRepository aliasRepository) {
         this.aliasRepository = aliasRepository;
-        this.restTemplate = restTemplate;
+
+        updatePfSenseAliases();
     }
 
 
@@ -68,9 +71,10 @@ public class AliasController {
 
 
     public void updatePfSenseAliases() {
-        //Gör en unsecure connection
-        RestTemplate restTemplate;
-        try { restTemplate = getRestTemplate();
+
+        //Gör en unsecure connection för att skippa certifcateexception
+        RestTemplate restTemplate = null;
+        try {restTemplate = getInsecureRestTemplate();
         } catch (KeyStoreException e) {
             e.printStackTrace();
         } catch (NoSuchAlgorithmException e) {
@@ -79,14 +83,29 @@ public class AliasController {
             e.printStackTrace();
         }
 
-        HttpHeaders headers = new HttpHeaders();
-        headers.setAccept(Arrays.asList(MediaType.APPLICATION_JSON));
-        headers.set("Authorization", "fauxapi-auth: " + Auth.fauxapiAuth());
-        HttpEntity<String> entity = new HttpEntity<String>("https://192.168.1.2/fauxapi/v1/?action=alias_update_urltables", headers);
+        HttpEntity<String> entity = getAcceptJsonAndAuthedEntity();
+
+        ResponseEntity<String> response = null;
+        try {
+             response = restTemplate
+                    .exchange(pfsenseUrl + "/fauxapi/v1/?action=alias_update_urltables", HttpMethod.GET, entity, String.class);
+
+        } catch (RestClientException e) {
+            e.printStackTrace();
+        } finally {
+            System.out.println("response: " + response);
+        }
 
     }
 
-    public RestTemplate getRestTemplate() throws KeyStoreException, NoSuchAlgorithmException, KeyManagementException {
+    private HttpEntity<String> getAcceptJsonAndAuthedEntity() {
+        HttpHeaders headers = new HttpHeaders();
+        headers.setAccept(Arrays.asList(MediaType.APPLICATION_JSON));
+        headers.set("fauxapi-auth", Auth.fauxapiAuth());
+        return new HttpEntity<String>(headers);
+    }
+
+    public RestTemplate getInsecureRestTemplate() throws KeyStoreException, NoSuchAlgorithmException, KeyManagementException {
         TrustStrategy acceptingTrustStrategy = new TrustStrategy() {
             @Override
             public boolean isTrusted(X509Certificate[] x509Certificates, String s) throws CertificateException {
