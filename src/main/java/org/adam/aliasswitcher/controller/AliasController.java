@@ -33,7 +33,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-
+@CrossOrigin(origins = "http://localhost:8080", maxAge = 3600)
 @RestController
 @EnableWebMvc
 public class AliasController {
