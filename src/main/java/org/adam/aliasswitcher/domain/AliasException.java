@@ -1,4 +1,4 @@
-package org.adam.aliasswitcher;
+package org.adam.aliasswitcher.domain;
 
 public class AliasException extends RuntimeException {
 

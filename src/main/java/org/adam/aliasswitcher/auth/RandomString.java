@@ -1,4 +1,4 @@
-package org.adam.aliasswitcher;
+package org.adam.aliasswitcher.auth;
 
 import java.security.SecureRandom;
 import java.util.Locale;
