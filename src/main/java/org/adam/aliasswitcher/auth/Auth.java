@@ -1,4 +1,4 @@
-package org.adam.aliasswitcher;
+package org.adam.aliasswitcher.auth;
 
 import org.apache.commons.codec.digest.DigestUtils;
 

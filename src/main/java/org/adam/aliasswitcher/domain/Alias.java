@@ -1,4 +1,4 @@
-package org.adam.aliasswitcher;
+package org.adam.aliasswitcher.domain;
 
 import lombok.Data;
 

@@ -1,7 +1,13 @@
-package org.adam.aliasswitcher;
+package org.adam.aliasswitcher.controller;
 
 
 
+import com.fasterxml.jackson.databind.JsonNode;
+import org.adam.aliasswitcher.AliasRepository;
+import org.adam.aliasswitcher.auth.Auth;
+import org.adam.aliasswitcher.domain.Alias;
+import org.adam.aliasswitcher.domain.AliasException;
+import org.adam.aliasswitcher.domain.Host;
 import org.springframework.http.*;
 import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
 import org.springframework.web.bind.annotation.*;
@@ -34,13 +40,22 @@ public class AliasController {
 
     AliasRepository aliasRepository;
     String pfsenseUrl = "https://192.168.1.2";
+    RestTemplate insecureRestTemplate;
 
 
 
     public AliasController(AliasRepository aliasRepository) {
         this.aliasRepository = aliasRepository;
-
-        updatePfSenseAliases();
+        this.insecureRestTemplate = null;
+        try {
+             insecureRestTemplate = getInsecureRestTemplate();
+        } catch (KeyStoreException e) {
+            e.printStackTrace();
+        } catch (NoSuchAlgorithmException e) {
+            e.printStackTrace();
+        } catch (KeyManagementException e) {
+            e.printStackTrace();
+        }
     }
 
 
@@ -69,32 +84,36 @@ public class AliasController {
         return ipList.toString();
     }
 
-
-    public void updatePfSenseAliases() {
-
-        //Gör en unsecure connection för att skippa certifcateexception
-        RestTemplate restTemplate = null;
-        try {restTemplate = getInsecureRestTemplate();
-        } catch (KeyStoreException e) {
-            e.printStackTrace();
-        } catch (NoSuchAlgorithmException e) {
-            e.printStackTrace();
-        } catch (KeyManagementException e) {
-            e.printStackTrace();
-        }
-
-        HttpEntity<String> entity = getAcceptJsonAndAuthedEntity();
+    @GetMapping("/aliases/update_urltables")
+    public ResponseEntity<String> updatePfSenseAliases() {
 
         ResponseEntity<String> response = null;
         try {
-             response = restTemplate
-                    .exchange(pfsenseUrl + "/fauxapi/v1/?action=alias_update_urltables", HttpMethod.GET, entity, String.class);
+             response = insecureRestTemplate
+                    .exchange(pfsenseUrl + "/fauxapi/v1/?action=alias_update_urltables", HttpMethod.GET, getAcceptJsonAndAuthedEntity(), String.class);
 
         } catch (RestClientException e) {
             e.printStackTrace();
-        } finally {
-            System.out.println("response: " + response);
         }
+        return response;
+
+
+    }
+
+    public void getPfsenseConfig() {
+
+        ResponseEntity<JsonNode> response = null;
+
+        try {
+            response = insecureRestTemplate
+                    .exchange(pfsenseUrl + "/fauxapi/v1/?action=config_get", HttpMethod.GET, getAcceptJsonAndAuthedEntity(), JsonNode.class);
+
+        } catch (RestClientException e) {
+            e.printStackTrace();
+        }
+
+        JsonNode jsonNode = response.getBody();
+        System.out.println(jsonNode);
 
     }
 
@@ -104,7 +123,7 @@ public class AliasController {
         headers.set("fauxapi-auth", Auth.fauxapiAuth());
         return new HttpEntity<String>(headers);
     }
-
+    //Gör en insecure connection för att skippa certifcateexception
     public RestTemplate getInsecureRestTemplate() throws KeyStoreException, NoSuchAlgorithmException, KeyManagementException {
         TrustStrategy acceptingTrustStrategy = new TrustStrategy() {
             @Override
