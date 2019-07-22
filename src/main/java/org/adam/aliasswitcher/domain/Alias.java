@@ -15,7 +15,7 @@ public class Alias {
     @GeneratedValue
     private  Long id;
     private String name;
-    @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     @JoinColumn(name = "alias_id")
     private List<Host> hosts;
 

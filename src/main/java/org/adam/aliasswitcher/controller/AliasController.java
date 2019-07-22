@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestTemplate;
 
+import java.net.URISyntaxException;
 import java.security.KeyManagementException;
 import java.security.KeyStoreException;
 import java.security.NoSuchAlgorithmException;
@@ -60,7 +61,7 @@ public class AliasController {
 
 
   //t.ex: aliases/search/findAddressesByName?name=privateVpnTokyo
-    @GetMapping("/aliases/search/findAddressesByName")
+    @GetMapping("/api/v1/aliases/search/findAddressesByName")
     public String getIps(@RequestParam String name){
 
         List<Alias> aliases = aliasRepository.findByName(name);
@@ -84,7 +85,26 @@ public class AliasController {
         return ipList.toString();
     }
 
-    @GetMapping("/aliases/update_urltables")
+    @PutMapping("/api/v1/aliases/{id}")
+    Alias replaceAlias(@RequestBody Alias newAlias, @PathVariable Long id) {
+
+        return aliasRepository.findById(id)
+                .map(alias -> {
+                    alias.setName(newAlias.getName());
+                    alias.setHosts(newAlias.getHosts());
+                    Alias savedAlias = aliasRepository.save(alias);
+                    updatePfSenseAliases();
+                    return savedAlias;
+                })
+                .orElseGet(() -> {
+                    newAlias.setId(id);
+                    Alias savedAlias = aliasRepository.save(newAlias);
+                    updatePfSenseAliases();
+                    return savedAlias;
+                });
+    }
+
+    @GetMapping("/api/v1/aliases/update_urltables")
     public ResponseEntity<String> updatePfSenseAliases() {
 
         ResponseEntity<String> response = null;
@@ -113,7 +133,6 @@ public class AliasController {
         }
 
         JsonNode jsonNode = response.getBody();
-        System.out.println(jsonNode);
 
     }
 
