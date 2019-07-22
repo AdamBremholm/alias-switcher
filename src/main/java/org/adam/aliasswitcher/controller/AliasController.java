@@ -85,6 +85,26 @@ public class AliasController {
         return ipList.toString();
     }
 
+    //Get All
+    @GetMapping("/api/v1/aliases")
+    List<Alias> all() {
+        return aliasRepository.findAll();
+    }
+    //Get One
+    @GetMapping("/api/v1/aliases/{id}")
+    Alias one(@PathVariable Long id) {
+
+        return aliasRepository.findById(id)
+                .orElseThrow(() -> new AliasException(id + " is not found"));
+    }
+
+    @PostMapping("/api/v1/aliases")
+    Alias newAlias(@RequestBody Alias newAlias) {
+        Alias savedAlias = aliasRepository.save(newAlias);
+        updatePfSenseAliases();
+        return savedAlias;
+    }
+
     @PutMapping("/api/v1/aliases/{id}")
     Alias replaceAlias(@RequestBody Alias newAlias, @PathVariable Long id) {
 
@@ -102,6 +122,12 @@ public class AliasController {
                     updatePfSenseAliases();
                     return savedAlias;
                 });
+    }
+
+    @DeleteMapping("/api/v1/aliases/{id}")
+    void deleteAlias(@PathVariable Long id) {
+        aliasRepository.deleteById(id);
+        updatePfSenseAliases();
     }
 
     @GetMapping("/api/v1/aliases/update_urltables")
