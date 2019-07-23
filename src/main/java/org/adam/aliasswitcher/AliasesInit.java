@@ -1,7 +1,5 @@
 package org.adam.aliasswitcher;
 
-import org.adam.aliasswitcher.AliasRepository;
-import org.adam.aliasswitcher.auth.Auth;
 import org.adam.aliasswitcher.domain.Alias;
 import org.adam.aliasswitcher.domain.AliasFactory;
 import org.adam.aliasswitcher.domain.Host;

@@ -9,7 +9,7 @@ import java.util.TimeZone;
 
 import java.util.concurrent.ThreadLocalRandom;
 
-public class Auth {
+public class FauxApiAuth {
 
     final String host = "192.168.1.2";
 
@@ -19,10 +19,7 @@ public class Auth {
         String utcStamp = getUTCTimeStamp();
         String nonce = getNonce();
         String sha256hex = DigestUtils.sha256Hex(apiSecret+utcStamp+nonce);
-        StringBuilder auth = new StringBuilder();
-        auth.append(apiKey).append(":").append(utcStamp).append(":").append(nonce).append(":").append(sha256hex);
-        System.out.println(auth.toString());
-        return auth.toString();
+        return apiKey + ":" + utcStamp + ":" + nonce + ":" + sha256hex;
 
     }
 
@@ -38,11 +35,7 @@ public class Auth {
         SimpleDateFormat dateFormatGmt = new SimpleDateFormat("yyyyMMdd'Z'HHmmss");
         dateFormatGmt.setTimeZone(TimeZone.getTimeZone("UTC"));
 
-        String timeStamp = dateFormatGmt.format(new Date());
-        System.out.println(timeStamp);
-
-
-        return timeStamp;
+        return dateFormatGmt.format(new Date());
     }
 
 
