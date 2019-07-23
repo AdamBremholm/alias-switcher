@@ -4,7 +4,7 @@ package org.adam.aliasswitcher.controller;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import org.adam.aliasswitcher.AliasRepository;
-import org.adam.aliasswitcher.auth.Auth;
+import org.adam.aliasswitcher.auth.FauxApiAuth;
 import org.adam.aliasswitcher.domain.Alias;
 import org.adam.aliasswitcher.domain.AliasException;
 import org.adam.aliasswitcher.domain.Host;
@@ -15,7 +15,6 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestTemplate;
 
-import java.net.URISyntaxException;
 import java.security.KeyManagementException;
 import java.security.KeyStoreException;
 import java.security.NoSuchAlgorithmException;
@@ -145,6 +144,11 @@ public class AliasController {
 
 
     }
+    @PostMapping("/api/v1/authenticate")
+    public String auth() {
+
+        return "";
+    }
 
     public void getPfsenseConfig() {
 
@@ -165,7 +169,7 @@ public class AliasController {
     private HttpEntity<String> getAcceptJsonAndAuthedEntity() {
         HttpHeaders headers = new HttpHeaders();
         headers.setAccept(Arrays.asList(MediaType.APPLICATION_JSON));
-        headers.set("fauxapi-auth", Auth.fauxapiAuth());
+        headers.set("fauxapi-auth", FauxApiAuth.fauxapiAuth());
         return new HttpEntity<String>(headers);
     }
     //Gör en insecure connection för att skippa certifcateexception
