@@ -59,7 +59,7 @@ public class AliasController {
     }
 
 
-  //t.ex: aliases/search/findAddressesByName?name=privateVpnTokyo
+  //t.ex: api/v1/aliases/search/findAddressesByName?name=privateVpnTokyo
     @GetMapping("/api/v1/aliases/search/findAddressesByName")
     public String getIps(@RequestParam String name){
 

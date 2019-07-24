@@ -1,10 +1,16 @@
 package org.adam.aliasswitcher.jwt;
 
 import java.io.IOException;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.Enumeration;
+import java.util.stream.Collectors;
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
+import org.apache.commons.io.IOUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -27,6 +33,11 @@ public class JwtRequestFilter extends OncePerRequestFilter {
         String jwtToken = null;
 // JWT Token is in the form "Bearer token". Remove Bearer word and get
 // only the Token
+
+        //Uncomment to se incoming requests
+      // logger.info(httpServletRequestToString(request));
+
+
         if (requestTokenHeader != null && requestTokenHeader.startsWith("Bearer ")) {
             jwtToken = requestTokenHeader.substring(7);
             try {
@@ -42,6 +53,7 @@ public class JwtRequestFilter extends OncePerRequestFilter {
 // Once we get the token validate it.
         if (username != null && SecurityContextHolder.getContext().getAuthentication() == null) {
             UserDetails userDetails = this.jwtUserDetailsService.loadUserByUsername(username);
+            logger.info("im running");
 // if token is valid configure Spring Security to manually set
 // authentication
             if (jwtTokenUtil.validateToken(jwtToken, userDetails)) {
@@ -56,5 +68,36 @@ public class JwtRequestFilter extends OncePerRequestFilter {
             }
         }
         chain.doFilter(request, response);
+    }
+// Prints out request for debugging purposes
+    private String httpServletRequestToString(HttpServletRequest request) {
+        StringBuilder sb = new StringBuilder();
+
+        sb.append("Request Method = [" + request.getMethod() + "], ");
+        sb.append("Request URL Path = [" + request.getRequestURL() + "], ");
+
+        String headers =
+                Collections.list(request.getHeaderNames()).stream()
+                        .map(headerName -> headerName + " : " + Collections.list(request.getHeaders(headerName)) )
+                        .collect(Collectors.joining(", "));
+
+        if (headers.isEmpty()) {
+            sb.append("Request headers: NONE,");
+        } else {
+            sb.append("Request headers: ["+headers+"],");
+        }
+
+        String parameters =
+                Collections.list(request.getParameterNames()).stream()
+                        .map(p -> p + " : " + Arrays.asList( request.getParameterValues(p)) )
+                        .collect(Collectors.joining(", "));
+
+        if (parameters.isEmpty()) {
+            sb.append("Request parameters: NONE.");
+        } else {
+            sb.append("Request parameters: [" + parameters + "].");
+        }
+
+        return sb.toString();
     }
 }
