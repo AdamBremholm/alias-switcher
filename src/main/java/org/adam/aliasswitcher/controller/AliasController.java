@@ -33,7 +33,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-@CrossOrigin(origins = "http://localhost:8080", maxAge = 3600)
+@CrossOrigin(origins = "http://192.168.1.101:8080", maxAge = 3600)
 @RestController
 @EnableWebMvc
 public class AliasController {
@@ -41,6 +41,7 @@ public class AliasController {
     AliasRepository aliasRepository;
     String pfsenseUrl = "https://192.168.1.2";
     RestTemplate insecureRestTemplate;
+
 
 
 
@@ -56,6 +57,7 @@ public class AliasController {
         } catch (KeyManagementException e) {
             e.printStackTrace();
         }
+        updatePfSenseAliases();
     }
 
 
