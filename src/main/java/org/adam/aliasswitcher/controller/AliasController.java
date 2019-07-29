@@ -4,12 +4,16 @@ package org.adam.aliasswitcher.controller;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import org.adam.aliasswitcher.AliasRepository;
+import org.adam.aliasswitcher.ConfigProperties;
 import org.adam.aliasswitcher.auth.FauxApiAuth;
 import org.adam.aliasswitcher.domain.Alias;
 import org.adam.aliasswitcher.domain.AliasException;
 import org.adam.aliasswitcher.domain.Host;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.*;
 import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
+import org.springframework.stereotype.Component;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.client.RestClientException;
@@ -20,6 +24,7 @@ import java.security.KeyStoreException;
 import java.security.NoSuchAlgorithmException;
 import java.security.cert.CertificateException;
 import java.security.cert.X509Certificate;
+import javax.annotation.PostConstruct;
 import javax.net.ssl.SSLContext;
 import org.apache.http.conn.ssl.NoopHostnameVerifier;
 import org.apache.http.conn.ssl.SSLConnectionSocketFactory;
@@ -33,23 +38,28 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+
 @CrossOrigin(origins = "http://192.168.1.101:8080", maxAge = 3600)
 @RestController
 @EnableWebMvc
+
 public class AliasController {
 
     AliasRepository aliasRepository;
-    String pfsenseUrl = "https://192.168.1.2";
     RestTemplate insecureRestTemplate;
 
+    @Autowired
+    ConfigProperties configProperties;
 
 
-
+    @Autowired
     public AliasController(AliasRepository aliasRepository) {
         this.aliasRepository = aliasRepository;
         this.insecureRestTemplate = null;
+
+
         try {
-             insecureRestTemplate = getInsecureRestTemplate();
+        insecureRestTemplate = getInsecureRestTemplate();
         } catch (KeyStoreException e) {
             e.printStackTrace();
         } catch (NoSuchAlgorithmException e) {
@@ -57,7 +67,6 @@ public class AliasController {
         } catch (KeyManagementException e) {
             e.printStackTrace();
         }
-        updatePfSenseAliases();
     }
 
 
@@ -137,7 +146,7 @@ public class AliasController {
         ResponseEntity<String> response = null;
         try {
              response = insecureRestTemplate
-                    .exchange(pfsenseUrl + "/fauxapi/v1/?action=alias_update_urltables", HttpMethod.GET, getAcceptJsonAndAuthedEntity(), String.class);
+                    .exchange(configProperties.getHost() + "/fauxapi/v1/?action=alias_update_urltables", HttpMethod.GET, getAcceptJsonAndAuthedEntity(), String.class);
 
         } catch (RestClientException e) {
             e.printStackTrace();
@@ -158,7 +167,7 @@ public class AliasController {
 
         try {
             response = insecureRestTemplate
-                    .exchange(pfsenseUrl + "/fauxapi/v1/?action=config_get", HttpMethod.GET, getAcceptJsonAndAuthedEntity(), JsonNode.class);
+                    .exchange( configProperties.getHost() + "/fauxapi/v1/?action=config_get", HttpMethod.GET, getAcceptJsonAndAuthedEntity(), JsonNode.class);
 
         } catch (RestClientException e) {
             e.printStackTrace();
@@ -171,7 +180,7 @@ public class AliasController {
     private HttpEntity<String> getAcceptJsonAndAuthedEntity() {
         HttpHeaders headers = new HttpHeaders();
         headers.setAccept(Arrays.asList(MediaType.APPLICATION_JSON));
-        headers.set("fauxapi-auth", FauxApiAuth.fauxapiAuth());
+        headers.set("fauxapi-auth", FauxApiAuth.fauxapiAuth(configProperties.getApiKey(),configProperties.getApiSecret()));
         return new HttpEntity<String>(headers);
     }
     //Gör en insecure connection för att skippa certifcateexception
@@ -190,6 +199,7 @@ public class AliasController {
         RestTemplate restTemplate = new RestTemplate(requestFactory);
         return restTemplate;
     }
+
 
 
 
