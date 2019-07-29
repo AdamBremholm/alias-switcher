@@ -45,28 +45,23 @@ import java.util.List;
 
 public class AliasController {
 
-    AliasRepository aliasRepository;
-    RestTemplate insecureRestTemplate;
-
-    @Autowired
+    private final AliasRepository aliasRepository;
+    private RestTemplate insecureRestTemplate;
+    private final
     ConfigProperties configProperties;
 
 
     @Autowired
-    public AliasController(AliasRepository aliasRepository) {
+    public AliasController(AliasRepository aliasRepository, ConfigProperties configProperties) {
         this.aliasRepository = aliasRepository;
+        this.configProperties = configProperties;
         this.insecureRestTemplate = null;
-
-
         try {
         insecureRestTemplate = getInsecureRestTemplate();
-        } catch (KeyStoreException e) {
-            e.printStackTrace();
-        } catch (NoSuchAlgorithmException e) {
-            e.printStackTrace();
-        } catch (KeyManagementException e) {
+        } catch (KeyStoreException | NoSuchAlgorithmException | KeyManagementException e) {
             e.printStackTrace();
         }
+
     }
 
 
