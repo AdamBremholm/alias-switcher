@@ -32,3 +32,6 @@ build/
 
 ###log files###
 *.log
+
+##Spring config##
+application.properties
