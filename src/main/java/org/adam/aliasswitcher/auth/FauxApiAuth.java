@@ -1,6 +1,6 @@
 package org.adam.aliasswitcher.auth;
-
 import org.apache.commons.codec.digest.DigestUtils;
+
 
 import java.security.SecureRandom;
 import java.text.SimpleDateFormat;
@@ -9,13 +9,12 @@ import java.util.TimeZone;
 
 import java.util.concurrent.ThreadLocalRandom;
 
+
+
 public class FauxApiAuth {
 
-    final String host = "192.168.1.2";
 
-    public static String fauxapiAuth(){
-        final String apiKey = "***REMOVED***";
-        final String apiSecret = "***REMOVED***";
+    public static String fauxapiAuth(String apiKey, String apiSecret){
         String utcStamp = getUTCTimeStamp();
         String nonce = getNonce();
         String sha256hex = DigestUtils.sha256Hex(apiSecret+utcStamp+nonce);
