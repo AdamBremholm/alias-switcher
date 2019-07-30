@@ -1,7 +1,5 @@
 package org.adam.aliasswitcher.controller;
 
-
-
 import com.fasterxml.jackson.databind.JsonNode;
 import org.adam.aliasswitcher.AliasRepository;
 import org.adam.aliasswitcher.ConfigProperties;
@@ -10,10 +8,9 @@ import org.adam.aliasswitcher.domain.Alias;
 import org.adam.aliasswitcher.domain.AliasException;
 import org.adam.aliasswitcher.domain.Host;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Import;
 import org.springframework.http.*;
 import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
-import org.springframework.stereotype.Component;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.client.RestClientException;
@@ -24,7 +21,6 @@ import java.security.KeyStoreException;
 import java.security.NoSuchAlgorithmException;
 import java.security.cert.CertificateException;
 import java.security.cert.X509Certificate;
-import javax.annotation.PostConstruct;
 import javax.net.ssl.SSLContext;
 import org.apache.http.conn.ssl.NoopHostnameVerifier;
 import org.apache.http.conn.ssl.SSLConnectionSocketFactory;
@@ -42,7 +38,7 @@ import java.util.List;
 @CrossOrigin(origins = "http://192.168.1.101:8080", maxAge = 3600)
 @RestController
 @EnableWebMvc
-
+@Import({ConfigProperties.class })
 public class AliasController {
 
     private final AliasRepository aliasRepository;
