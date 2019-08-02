@@ -39,10 +39,9 @@ import java.util.Arrays;
 import java.util.List;
 
 
-@CrossOrigin(origins = "http://192.168.1.101:8080", maxAge = 3600)
+@CrossOrigin(origins = "*", allowedHeaders = "*")
 @RestController
 @EnableWebMvc
-
 public class AliasController {
 
     private final AliasRepository aliasRepository;
@@ -118,13 +117,11 @@ public class AliasController {
                     alias.setName(newAlias.getName());
                     alias.setHosts(newAlias.getHosts());
                     Alias savedAlias = aliasRepository.save(alias);
-                    updatePfSenseAliases();
                     return savedAlias;
                 })
                 .orElseGet(() -> {
                     newAlias.setId(id);
                     Alias savedAlias = aliasRepository.save(newAlias);
-                    updatePfSenseAliases();
                     return savedAlias;
                 });
     }
@@ -132,7 +129,6 @@ public class AliasController {
     @DeleteMapping("/api/v1/aliases/{id}")
     void deleteAlias(@PathVariable Long id) {
         aliasRepository.deleteById(id);
-        updatePfSenseAliases();
     }
 
     @GetMapping("/api/v1/aliases/update_urltables")
