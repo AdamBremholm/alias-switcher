@@ -39,7 +39,7 @@ import java.util.Arrays;
 import java.util.List;
 
 
-@CrossOrigin(origins = "http://192.168.1.101:8080", maxAge = 3600)
+@CrossOrigin(origins = "*", allowedHeaders = "*")
 @RestController
 @EnableWebMvc
 

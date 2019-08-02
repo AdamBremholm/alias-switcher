@@ -20,7 +20,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.adam.aliasswitcher.jwt.JwtTokenUtil;
 
 @RestController
-@CrossOrigin
+@CrossOrigin(origins = "*", allowedHeaders = "*")
 public class JwtAuthenticationController {
     @Autowired
     private AuthenticationManager authenticationManager;
