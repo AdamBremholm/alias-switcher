@@ -45,8 +45,8 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     }
     @Override
     protected void configure(HttpSecurity httpSecurity) throws Exception {
-// We don't need CSRF for this example
         httpSecurity.requiresChannel().anyRequest().requiresSecure().and().
+// We don't need CSRF for this example
         csrf().disable()
 // dont authenticate this particular request (added api for pfsense to don't need any auth)
                 .authorizeRequests().antMatchers("/authenticate", "/api/v1/aliases/search/findAddressesByName**").permitAll().
