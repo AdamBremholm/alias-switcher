@@ -6,8 +6,7 @@ import javax.persistence.*;
 import java.util.Objects;
 
 @Data
-@Entity(name = "Host")
-@Table(name = "host")
+@Entity
 public class Host {
 
     @Id

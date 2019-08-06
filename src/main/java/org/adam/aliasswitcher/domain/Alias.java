@@ -7,16 +7,14 @@ import javax.persistence.*;
 import java.util.List;
 
 @Data
-@Entity(name = "Alias")
-@Table(name = "alias")
+@Entity
 public class Alias {
 
     @Id
     @GeneratedValue
     private  Long id;
     private String name;
-    @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
-    @JoinColumn(name = "alias_id")
+    @OneToMany(cascade = CascadeType.ALL)
     private List<Host> hosts;
 
 
