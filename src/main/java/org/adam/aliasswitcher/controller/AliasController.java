@@ -116,13 +116,11 @@ public class AliasController {
                 .map(alias -> {
                     alias.setName(newAlias.getName());
                     alias.setHosts(newAlias.getHosts());
-                    Alias savedAlias = aliasRepository.save(alias);
-                    return savedAlias;
+                    return aliasRepository.save(alias);
                 })
                 .orElseGet(() -> {
                     newAlias.setId(id);
-                    Alias savedAlias = aliasRepository.save(newAlias);
-                    return savedAlias;
+                    return aliasRepository.save(newAlias);
                 });
     }
 
