@@ -35,6 +35,7 @@ public class AliasesInit {
         Alias privateVpnTokyo = AliasFactory.createAlias("privateVpnTokyo");
         Alias azireOpenStockholm = AliasFactory.createAlias("azireOpenStockholm");
         Alias azireClosedStockholm = AliasFactory.createAlias("azireClosedStockholm");
+        Alias privateVpnNyc1 = AliasFactory.createAlias("privateVpnNyc1");
         Alias wan = AliasFactory.createAlias("wan");
 
         privateVpnTokyo.add(philipsTV);
@@ -50,6 +51,7 @@ public class AliasesInit {
         aliasRepository.save(privateVpnTokyo);
         aliasRepository.save(azireOpenStockholm);
         aliasRepository.save(azireClosedStockholm);
+        aliasRepository.save(privateVpnNyc1);
         aliasRepository.save(wan);
 
 
