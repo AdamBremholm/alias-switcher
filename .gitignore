@@ -37,4 +37,4 @@ build/
 application.properties
 
 ## init config
-aliases-init
+aliases-init.txt
