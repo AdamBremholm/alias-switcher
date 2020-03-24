@@ -34,7 +34,6 @@ build/
 *.log
 
 ##Spring config##
-application.properties
 
 ## init config
 aliases-init.txt
